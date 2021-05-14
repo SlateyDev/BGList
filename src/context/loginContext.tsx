@@ -7,13 +7,18 @@ const initialLogin: LoginDefinition = {
 };
 
 type LoginContextProps = {
-  login?: LoginDefinition;
-  checkLogin?: () => void;
-  doLogin?: (username: string, password: string) => void;
-  doLogout?: () => void;
+  login: LoginDefinition;
+  checkLogin: () => void;
+  doLogin: (username: string, password: string) => void;
+  doLogout: () => void;
 };
 
-export const LoginContext = React.createContext<LoginContextProps>({});
+export const LoginContext = React.createContext<LoginContextProps>({
+  login: initialLogin,
+  checkLogin: () => {},
+  doLogin: () => {},
+  doLogout: () => {},
+});
 
 export const LoginProvider: React.FC = ({children}) => {
   const [login, setLogin] = React.useState<LoginDefinition>(initialLogin);

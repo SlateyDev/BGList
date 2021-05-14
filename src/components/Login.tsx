@@ -46,10 +46,8 @@ export const Login = ({navigation}: LoginNavigationProps) => {
         <Button
           title="Login"
           onPress={() => {
-            if (doLogin) {
-              doLogin(textUsername, textPassword);
-              navigation.goBack();
-            }
+            doLogin(textUsername, textPassword);
+            navigation.goBack();
           }}
         />
       </View>
