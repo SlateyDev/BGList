@@ -1,5 +1,6 @@
 import React from 'react';
 import {LoginDefinition} from '../interface/loginDefinition';
+import {bggCheckLogin, bggLogout, bggLogin} from '../service/bggApi';
 
 const initialLogin: LoginDefinition = {
   loggedIn: 0,
@@ -24,41 +25,20 @@ export const LoginProvider: React.FC = ({children}) => {
   const [login, setLogin] = React.useState<LoginDefinition>(initialLogin);
 
   const checkLogin = async () => {
-    try {
-      setLogin({loggedIn: 0, username: ''});
-      const response = await fetch(
-        'https://boardgamegeek.com/api/accounts/current',
-        {
-          method: 'GET',
-        },
-      );
+    setLogin({loggedIn: 0, username: ''});
+    const response = await bggCheckLogin();
 
-      console.log(response);
-      if (response.status === 200) {
-        const loggedInDetails = await response.json();
-        console.log(loggedInDetails);
-        setLogin({loggedIn: 1, username: loggedInDetails.username});
-      } else {
-        setLogin({loggedIn: -1, username: ''});
-      }
-    } catch (error) {
-      console.error(error);
+    if (response !== undefined) {
+      setLogin({loggedIn: 1, username: response});
+    } else {
       setLogin({loggedIn: -1, username: ''});
     }
   };
 
   const doLogin = async (username: string, password: string) => {
     try {
-      const response = await fetch('https://boardgamegeek.com/login/api/v1', {
-        method: 'POST',
-        headers: {'content-type': 'application/json'},
-        body: JSON.stringify({
-          credentials: {username: username, password: password},
-        }),
-      });
-
-      console.log(response.headers);
-      checkLogin();
+      await bggLogin(username, password);
+      await checkLogin();
     } catch (error) {
       console.error(error);
     }
@@ -66,11 +46,8 @@ export const LoginProvider: React.FC = ({children}) => {
 
   const doLogout = async () => {
     try {
-      await fetch('https://boardgamegeek.com/logout', {
-        method: 'GET',
-      });
-
-      checkLogin();
+      await bggLogout();
+      await checkLogin();
     } catch (error) {
       console.error(error);
     }

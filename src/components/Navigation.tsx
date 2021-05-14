@@ -1,17 +1,21 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {useEffect, useRef} from 'react';
-import {AppState, AppStateStatus} from 'react-native';
+import {AppState, AppStateStatus, useColorScheme} from 'react-native';
 import {HomeScreen} from './HomeScreen';
 import {Login} from './Login';
 import {LoginContext} from '../context/loginContext';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const Navigation = () => {
   const appState = useRef(AppState.currentState);
-  const {checkLogin} = React.useContext(LoginContext);
+  const {login, checkLogin} = React.useContext(LoginContext);
 
   useEffect(() => {
     AppState.addEventListener('change', _handleAppStateChange);
+    setTimeout(() => {
+      checkLogin();
+    }, 2000);
 
     return () => {
       AppState.removeEventListener('change', _handleAppStateChange);
@@ -26,7 +30,9 @@ const Navigation = () => {
       console.log(
         `${appState.current} -> ${nextAppState} = App has come to the foreground`,
       );
-      await checkLogin();
+      if (login.loggedIn !== 0) {
+        await checkLogin();
+      }
     } else {
       console.log(`${appState.current} -> ${nextAppState}`);
     }
@@ -36,6 +42,7 @@ const Navigation = () => {
   };
 
   const Stack = createStackNavigator();
+  const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <NavigationContainer>
@@ -43,12 +50,34 @@ const Navigation = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{title: 'BGList'}}
+          options={{
+            title: 'Board Game Lister',
+            headerStyle: {
+              backgroundColor: isDarkMode ? Colors.dark : Colors.light,
+            },
+            headerTitleStyle: {
+              color: isDarkMode ? Colors.white : Colors.black,
+            },
+            cardStyle: {
+              backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+            },
+          }}
         />
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{title: 'BGG Login'}}
+          options={{
+            title: 'BGG Login',
+            headerStyle: {
+              backgroundColor: isDarkMode ? Colors.dark : Colors.light,
+            },
+            headerTitleStyle: {
+              color: isDarkMode ? Colors.white : Colors.black,
+            },
+            cardStyle: {
+              backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+            },
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
