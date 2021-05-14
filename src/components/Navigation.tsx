@@ -3,9 +3,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React, {useEffect, useRef} from 'react';
 import {AppState, AppStateStatus, useColorScheme} from 'react-native';
 import {HomeScreen} from './HomeScreen';
-import {Login} from './Login';
+import {LoginScreen} from './LoginScreen';
 import {LoginContext} from '../context/loginContext';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {GameDetailsScreen} from './GameDetailsScreen';
 
 const Navigation = () => {
   const appState = useRef(AppState.currentState);
@@ -65,9 +66,25 @@ const Navigation = () => {
         />
         <Stack.Screen
           name="Login"
-          component={Login}
+          component={LoginScreen}
           options={{
             title: 'BGG Login',
+            headerStyle: {
+              backgroundColor: isDarkMode ? Colors.dark : Colors.light,
+            },
+            headerTitleStyle: {
+              color: isDarkMode ? Colors.white : Colors.black,
+            },
+            cardStyle: {
+              backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Game Details"
+          component={GameDetailsScreen}
+          options={{
+            title: 'Game Details',
             headerStyle: {
               backgroundColor: isDarkMode ? Colors.dark : Colors.light,
             },

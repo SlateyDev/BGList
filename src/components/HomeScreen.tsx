@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  StyleSheet,
 } from 'react-native';
 import {Text, View, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -66,6 +67,9 @@ export const HomeScreen = ({navigation}: HomeScreenNavigationProps) => {
                 style={{
                   backgroundColor: isDarkMode ? Colors.black : Colors.white,
                 }}>
+                {gameList && gameList.items.length > 0 && (
+                  <Text style={styles.gamesListTitle}>Games List</Text>
+                )}
                 {gameList &&
                   gameList.items.map(game => (
                     <GameCard key={game.collId} game={game} />
@@ -84,3 +88,13 @@ export const HomeScreen = ({navigation}: HomeScreenNavigationProps) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  gamesListTitle: {
+    alignSelf: 'center',
+    fontWeight: '700',
+    fontSize: 22,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+});
