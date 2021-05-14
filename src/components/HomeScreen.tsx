@@ -119,7 +119,7 @@ export const HomeScreen = ({navigation}: HomeScreenNavigationProps) => {
         style={backgroundStyle}>
         <MyHeader />
         <View>
-          {login && login.loggedIn <= 0 && (
+          {login.loggedIn <= 0 && (
             <>
               {login.loggedIn === 0 && <ActivityIndicator />}
               <Button
@@ -130,20 +130,16 @@ export const HomeScreen = ({navigation}: HomeScreenNavigationProps) => {
               />
             </>
           )}
-          {login && login.loggedIn === 1 && (
+          {login.loggedIn === 1 && (
             <Button
               onPress={() => {
-                if (doLogout) {
-                  doLogout();
-                }
+                doLogout();
               }}
               title="Logout"
             />
           )}
-          {login && login.loggedIn === 1 && (
-            <Text>Logged in as: {login.username}</Text>
-          )}
-          {login && login.loggedIn === -1 && <Text>Not logged in</Text>}
+          {login.loggedIn === 1 && <Text>Logged in as: {login.username}</Text>}
+          {login.loggedIn === -1 && <Text>Not logged in</Text>}
           <View
             style={{
               backgroundColor: isDarkMode ? Colors.black : Colors.white,

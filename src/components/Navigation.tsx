@@ -26,9 +26,7 @@ const Navigation = () => {
       console.log(
         `${appState.current} -> ${nextAppState} = App has come to the foreground`,
       );
-      if (checkLogin) {
-        await checkLogin();
-      }
+      await checkLogin();
     } else {
       console.log(`${appState.current} -> ${nextAppState}`);
     }
