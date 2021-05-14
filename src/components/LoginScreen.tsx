@@ -13,7 +13,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {LoginContext} from '../context/loginContext';
 import {LoginNavigationProps} from '../interface/navigationProps';
 
-export const Login = ({navigation}: LoginNavigationProps) => {
+export const LoginScreen = ({navigation}: LoginNavigationProps) => {
   const {doLogin} = useContext(LoginContext);
   const [textUsername, onChangeTextUsername] = useState('');
   const [textPassword, onChangeTextPassword] = useState('');

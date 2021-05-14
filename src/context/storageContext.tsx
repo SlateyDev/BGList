@@ -35,8 +35,10 @@ export const StorageProvider: React.FC = ({children}) => {
     AsyncStorage.getItem('gameList', gameListCallback);
   }, []);
 
-  const updateGameList = (newGameList: BggGameListDefinition) =>
+  const updateGameList = (newGameList: BggGameListDefinition) => {
     AsyncStorage.setItem('gameList', JSON.stringify(newGameList));
+    setGameList(newGameList);
+  };
 
   return (
     <StorageContext.Provider value={{gameList, updateGameList}}>
