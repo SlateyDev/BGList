@@ -1,18 +1,18 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {ItemDefinition} from '../interface/itemDefinition';
+import {BggItemDefinition} from '../interface/bggItemDefinition';
 
-export const GameCard = (props: {game: ItemDefinition}) => {
+export const GameCard = (props: {game: BggItemDefinition}) => {
   return (
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>{props.game.name.text}</Text>
       <Text style={styles.sectionDescription}>
-        Players: {props.game.stats?.minplayers} - {props.game.stats?.maxplayers}
+        Players: {props.game.stats?.minPlayers} - {props.game.stats?.maxPlayers}
       </Text>
       <Text style={styles.sectionDescription}>
-        Duration: {props.game.stats?.minplaytime}{' '}
-        {props.game.stats?.minplaytime !== props.game.stats?.maxplaytime &&
-          `- ${props.game.stats?.maxplaytime}`}{' '}
+        Duration: {props.game.stats?.minPlaytime}{' '}
+        {props.game.stats?.minPlaytime !== props.game.stats?.maxPlaytime &&
+          `- ${props.game.stats?.maxPlaytime}`}{' '}
         minutes
       </Text>
     </View>

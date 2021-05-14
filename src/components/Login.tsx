@@ -62,9 +62,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   loginTextBox: {
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: Colors.dark,
+    backgroundColor: Colors.light,
     width: '80%',
     alignSelf: 'center',
     height: 32,
