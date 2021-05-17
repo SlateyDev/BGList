@@ -3,33 +3,24 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {BggItemDefinition} from './bggItemDefinition';
 
 type RootStackParamList = {
-  HomeScreen: undefined;
-  LoginScreen: undefined;
-  GameDetailsScreen: {game: BggItemDefinition};
+  Home: undefined;
+  Login: undefined;
+  GameDetails: {game: BggItemDefinition};
 };
 
-type LoginRouteProp = RouteProp<RootStackParamList, 'LoginScreen'>;
+type LoginRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
-type LoginNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'LoginScreen'
->;
+type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
-type HomeScreenRouteProp = RouteProp<RootStackParamList, 'HomeScreen'>;
+type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
-type HomeScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'HomeScreen'
->;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
-type GameDetailsScreenRouteProp = RouteProp<
-  RootStackParamList,
-  'GameDetailsScreen'
->;
+type GameDetailsScreenRouteProp = RouteProp<RootStackParamList, 'GameDetails'>;
 
 type GameDetailsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'GameDetailsScreen'
+  'GameDetails'
 >;
 
 export type LoginNavigationProps = {

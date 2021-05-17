@@ -10,14 +10,19 @@ const initialGameList: BggGameListDefinition = {
 type StorageContextProps = {
   gameList: BggGameListDefinition;
   updateGameList: (newGameList: BggGameListDefinition) => void;
+  username: string;
+  updateUsername: (newUsername: string) => void;
 };
 
 export const StorageContext = createContext<StorageContextProps>({
   gameList: initialGameList,
   updateGameList: () => {},
+  username: '',
+  updateUsername: () => {},
 });
 
 export const StorageProvider: React.FC = ({children}) => {
+  const [username, setUsername] = useState<string>('');
   const [gameList, setGameList] =
     useState<BggGameListDefinition>(initialGameList);
 
@@ -30,9 +35,24 @@ export const StorageProvider: React.FC = ({children}) => {
     }
   };
 
+  const usernameCallback = (
+    error: Error | undefined,
+    storageUsername: string | undefined,
+  ) => {
+    if (storageUsername) {
+      setUsername(storageUsername);
+    }
+  };
+
+  const updateUsername = (newUsername: string) => {
+    AsyncStorage.setItem('username', newUsername);
+    setUsername(newUsername);
+  };
+
   useEffect(() => {
     console.log('getting items');
     AsyncStorage.getItem('gameList', gameListCallback);
+    AsyncStorage.getItem('username', usernameCallback);
   }, []);
 
   const updateGameList = (newGameList: BggGameListDefinition) => {
@@ -41,7 +61,8 @@ export const StorageProvider: React.FC = ({children}) => {
   };
 
   return (
-    <StorageContext.Provider value={{gameList, updateGameList}}>
+    <StorageContext.Provider
+      value={{gameList, updateGameList, username, updateUsername}}>
       {children}
     </StorageContext.Provider>
   );

@@ -38,6 +38,7 @@ export const bggLogout = async (): Promise<Response> => {
   });
 };
 
+//Note: this request can fail and has not yet been handled
 export const bggGetGameList = async (
   username: string,
 ): Promise<BggGameListDefinition | undefined> => {
@@ -111,6 +112,66 @@ export const bggGetGameList = async (
         thumbnail: item.thumbnail,
         yearPublished: item.yearpublished,
       })),
+    };
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//Search for game
+//request(GET): http://www.boardgamegeek.com/xmlapi/search?search=Crossbows%20and%20Catapults
+//further querystring params: exact=1
+//response: XML data
+export const bggSearchGames = async (
+  searchText: string,
+  exact: boolean = false,
+) => {
+  try {
+    const response = await fetch(
+      `https://boardgamegeek.com/xmlapi/search?search=${encodeURIComponent(
+        searchText,
+      )}${exact ? '&exact=1' : ''}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const responseXml = await response.text();
+
+    const responseData = parse(responseXml, {
+      attributeNamePrefix: 'attr_',
+      textNodeName: 'innerText',
+      ignoreAttributes: false,
+      allowBooleanAttributes: true,
+      arrayMode: true,
+    });
+
+    const decodeMap: any = {amp: '&', lt: '<', gt: '>', quot: '"'};
+    const decodeText = (text: string) =>
+      text.replace(/&([^;]+);/g, (m: string, c: string) => {
+        if (c.startsWith('#')) {
+          return String.fromCharCode(parseInt(c.substr(1), 10));
+        } else {
+          return decodeMap[c] ?? m;
+        }
+      });
+
+    return {
+      totalItems: responseData.boardgames[0].boardgame?.length ?? 0,
+      termsOfUse: responseData.boardgames[0].attr_termsofuse,
+      items:
+        responseData.boardgames[0]?.boardgame?.map((item: any) => {
+          return {
+            objectId: item.attr_objectid,
+            objectType: 'thing',
+            subType: 'boardgame',
+            name: {
+              text: decodeText(item.name[0].innerText ?? item.name[0]),
+              sortIndex: 1,
+            },
+            yearPublished: item.yearpublished,
+          };
+        }) ?? [],
     };
   } catch (error) {
     console.error(error);

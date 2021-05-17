@@ -1,71 +1,67 @@
-import React, {useContext, useState} from 'react';
-import {
-  Button,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useContext, useState, useRef, useMemo} from 'react';
+import {StyleSheet, Text, TextInput, View, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {LoginContext} from '../context/loginContext';
 import {LoginNavigationProps} from '../interface/navigationProps';
+import {StorageContext} from '../context/storageContext';
 
 export const LoginScreen = ({navigation}: LoginNavigationProps) => {
   const {doLogin} = useContext(LoginContext);
-  const [textUsername, onChangeTextUsername] = useState('');
+  const {username} = useContext(StorageContext);
   const [textPassword, onChangeTextPassword] = useState('');
 
   const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        label: {
+          color: isDarkMode ? 'white' : 'black',
+          marginTop: 10,
+          width: '100%',
+          alignSelf: 'center',
+        },
+        value: {
+          backgroundColor: isDarkMode ? Colors.dark : Colors.light,
+          color: isDarkMode ? 'white' : 'black',
+          width: '100%',
+          alignSelf: 'center',
+          height: 32,
+          padding: 3,
+        },
+        tabContentContainer: {
+          flex: 1,
+          paddingLeft: 10,
+          paddingRight: 10,
+        },
+      }),
+    [isDarkMode],
+  );
+
+  const passwordTextBox = useRef<TextInput>(null);
+
+  const loginSubmit = () => {
+    doLogin(username, textPassword);
+    navigation.goBack();
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View>
-        <Text style={styles.loginLabel}>Username: </Text>
-        <TextInput
-          style={styles.loginTextBox}
-          onChangeText={onChangeTextUsername}
-          value={textUsername}
-          autoCompleteType="username"
-        />
-        <Text style={styles.loginLabel}>Password: </Text>
-        <TextInput
-          style={styles.loginTextBox}
-          onChangeText={onChangeTextPassword}
-          value={textPassword}
-          autoCompleteType="password"
-          secureTextEntry
-          textContentType="password"
-        />
-        <Button
-          title="Login"
-          onPress={() => {
-            doLogin(textUsername, textPassword);
-            navigation.goBack();
-          }}
-        />
-      </View>
-    </SafeAreaView>
+    <View style={styles.tabContentContainer}>
+      <Text style={styles.label}>Username</Text>
+      <Text style={{...styles.value, lineHeight: 26}}>{username}</Text>
+      <Text style={styles.label}>Password</Text>
+      <TextInput
+        ref={passwordTextBox}
+        style={styles.value}
+        onChangeText={onChangeTextPassword}
+        value={textPassword}
+        autoCompleteType="password"
+        secureTextEntry
+        textContentType="password"
+        onSubmitEditing={() => {
+          loginSubmit();
+        }}
+        returnKeyType="go"
+      />
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  loginLabel: {
-    marginTop: 10,
-    width: '80%',
-    alignSelf: 'center',
-  },
-  loginTextBox: {
-    backgroundColor: Colors.light,
-    width: '80%',
-    alignSelf: 'center',
-    height: 32,
-    padding: 3,
-  },
-});

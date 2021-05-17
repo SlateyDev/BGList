@@ -1,100 +1,49 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React, {useEffect, useRef} from 'react';
-import {AppState, AppStateStatus, useColorScheme} from 'react-native';
+import React from 'react';
+import {useColorScheme} from 'react-native';
 import {HomeScreen} from './HomeScreen';
 import {LoginScreen} from './LoginScreen';
-import {LoginContext} from '../context/loginContext';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {GameDetailsScreen} from './GameDetailsScreen';
 
 const Navigation = () => {
-  const appState = useRef(AppState.currentState);
-  const {login, checkLogin} = React.useContext(LoginContext);
+  const Stack = createStackNavigator();
 
-  useEffect(() => {
-    AppState.addEventListener('change', _handleAppStateChange);
-    setTimeout(() => {
-      checkLogin();
-    }, 2000);
-
-    return () => {
-      AppState.removeEventListener('change', _handleAppStateChange);
-    };
-  }, []);
-
-  const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
-    if (
-      appState.current.match(/unknown|inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      console.log(
-        `${appState.current} -> ${nextAppState} = App has come to the foreground`,
-      );
-      if (login.loggedIn !== 0) {
-        await checkLogin();
-      }
-    } else {
-      console.log(`${appState.current} -> ${nextAppState}`);
-    }
-
-    appState.current = nextAppState;
-    console.log(appState.current);
+  const isDarkMode = useColorScheme() === 'dark';
+  const screenOptions = {
+    headerStyle: {
+      backgroundColor: isDarkMode ? Colors.dark : Colors.light,
+    },
+    headerTitleStyle: {
+      color: isDarkMode ? Colors.white : Colors.black,
+    },
+    cardStyle: {
+      backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    },
   };
 
-  const Stack = createStackNavigator();
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
+    <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
+      <Stack.Navigator screenOptions={screenOptions}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{
-            title: 'Board Game Lister',
-            headerStyle: {
-              backgroundColor: isDarkMode ? Colors.dark : Colors.light,
-            },
-            headerTitleStyle: {
-              color: isDarkMode ? Colors.white : Colors.black,
-            },
-            cardStyle: {
-              backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-            },
-          }}
+          options={{title: 'Board Game Lister'}}
         />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{
-            title: 'BGG Login',
-            headerStyle: {
-              backgroundColor: isDarkMode ? Colors.dark : Colors.light,
-            },
-            headerTitleStyle: {
-              color: isDarkMode ? Colors.white : Colors.black,
-            },
-            cardStyle: {
-              backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-            },
-          }}
+          options={{title: 'BGG Login'}}
         />
         <Stack.Screen
           name="Game Details"
           component={GameDetailsScreen}
-          options={{
-            title: 'Game Details',
-            headerStyle: {
-              backgroundColor: isDarkMode ? Colors.dark : Colors.light,
-            },
-            headerTitleStyle: {
-              color: isDarkMode ? Colors.white : Colors.black,
-            },
-            cardStyle: {
-              backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-            },
-          }}
+          options={{title: 'Game Details'}}
         />
       </Stack.Navigator>
     </NavigationContainer>
