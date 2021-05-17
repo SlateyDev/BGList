@@ -6,6 +6,7 @@ import {BggGameListDefinition} from '../interface/bggGameListDefinition';
 
 type GameListProps = {
   gameList?: BggGameListDefinition;
+  filter?: string;
 };
 
 export const GameList = (props: GameListProps) => {
@@ -24,10 +25,23 @@ export const GameList = (props: GameListProps) => {
     [isDarkMode],
   );
 
+  const filteredGameList = useMemo(() => {
+    const numPlayers = 6;
+    if (props.filter) {
+      return props.gameList?.items.filter(
+        game =>
+          game.stats &&
+          game.stats.minPlayers <= numPlayers &&
+          numPlayers <= game.stats.maxPlayers,
+      );
+    }
+    return props.gameList?.items;
+  }, [props.gameList, props.filter]);
+
   return (
     <View style={styles.list}>
       {props.gameList &&
-        props.gameList.items.map(game => (
+        filteredGameList?.map(game => (
           <GameCard key={game.objectId} game={game} />
         ))}
     </View>

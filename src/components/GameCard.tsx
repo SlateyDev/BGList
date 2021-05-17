@@ -46,7 +46,7 @@ export const GameCard = (props: {game: BggItemDefinition}) => {
     <TouchableHighlight
       underlayColor={isDarkMode ? Colors.darker : Colors.lighter}
       onPress={() => {
-        navigation.navigate('Game Details', {game: props.game});
+        navigation.navigate('GameDetails', {game: props.game});
       }}>
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>
