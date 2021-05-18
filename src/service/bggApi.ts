@@ -1,5 +1,15 @@
 import {parse} from 'fast-xml-parser';
-import {BggGameListDefinition} from '../interface/bggGameListDefinition';
+import {GameDefinition} from '../interface/gameDefinition';
+
+const decodeMap: any = {amp: '&', lt: '<', gt: '>', quot: '"'};
+const decodeText = (text: string) =>
+  text.replace(/&([^;]+);/g, (m: string, c: string) => {
+    if (c.startsWith('#')) {
+      return String.fromCharCode(parseInt(c.substr(1), 10));
+    } else {
+      return decodeMap[c] ?? m;
+    }
+  });
 
 export const bggCheckLogin = async (): Promise<string | undefined> => {
   try {
@@ -41,7 +51,7 @@ export const bggLogout = async (): Promise<Response> => {
 //Note: this request can fail and has not yet been handled
 export const bggGetGameList = async (
   username: string,
-): Promise<BggGameListDefinition | undefined> => {
+): Promise<GameDefinition[] | undefined> => {
   try {
     const response = await fetch(
       `https://www.boardgamegeek.com/xmlapi/collection/${username}`,
@@ -56,63 +66,37 @@ export const bggGetGameList = async (
       allowBooleanAttributes: true,
     });
 
-    return {
-      totalItems: responseData.items['@_totalitems'],
-      termsOfUse: responseData.items['@_termsofuse'],
-      pubDate: responseData.items['@_pubdate'],
-      items: responseData.items.item.map((item: any) => ({
-        collId: item['@_collid'],
-        objectId: item['@_objectid'],
-        objectType: item['@_objecttype'],
-        subType: item['@_subtype'],
-        image: item.image,
-        name: {
-          text: item.name['#text'],
-          sortIndex: item.name['@_sortindex'],
-        },
-        numPlays: item.numplays,
-        stats: {
-          maxPlayers: item.stats['@_maxplayers'],
-          maxPlaytime: item.stats['@_maxplaytime'],
-          minPlayers: item.stats['@_minplayers'],
-          minPlaytime: item.stats['@_minplaytime'],
-          numOwned: item.stats['@_numowned'],
-          playingTime: item.stats['@_playingtime'],
-          rating: {
-            value: item.stats.rating['@_value'],
-            average: {
-              value: item.stats.rating.average['@_value'],
-            },
-            bayesianAverage: {
-              value: item.stats.rating.bayesaverage['@_value'],
-            },
-            median: {
-              value: item.stats.rating.median['@_value'],
-            },
-            standardDeviation: {
-              value: item.stats.rating.stddev['@_value'],
-            },
-            usersRated: {
-              value: item.stats.rating.usersrated['@_value'],
-            },
-          },
-        },
-        status: {
-          forTrade: parseInt(item.status['@_fortrade'], 10) !== 0,
-          lastModified: item.status['@_lastmodified'],
-          own: parseInt(item.status['@_own'], 10) !== 0,
-          preOrdered: parseInt(item.status['@_preordered'], 10) !== 0,
-          previouslyOwned: parseInt(item.status['@_prevowned'], 10) !== 0,
-          want: parseInt(item.status['@_want'], 10) !== 0,
-          wantToBuy: parseInt(item.status['@_wanttobuy'], 10) !== 0,
-          wantToPlay: parseInt(item.status['@_wanttoplay'], 10) !== 0,
-          wishlist: parseInt(item.status['@_wishlist'], 10) !== 0,
-          wishlistPriority: parseInt(item.status['@_wishlistpriority'], 10),
-        },
-        thumbnail: item.thumbnail,
-        yearPublished: item.yearpublished,
-      })),
-    };
+    return responseData.items.item.map((item: any) => ({
+      collectionId: parseInt(item['@_collid'], 10),
+      objectId: parseInt(item['@_objectid'], 10),
+      imageUri: item.image,
+      name: decodeText(item.name['#text']),
+      numPlays: parseInt(item.numplays, 10),
+      maxPlayers: parseInt(item.stats['@_maxplayers'], 10),
+      maxPlaytime: parseInt(item.stats['@_maxplaytime'], 10),
+      minPlayers: parseInt(item.stats['@_minplayers'], 10),
+      minPlaytime: parseInt(item.stats['@_minplaytime'], 10),
+      numOwned: parseInt(item.stats['@_numowned'], 10),
+      playingTime: parseInt(item.stats['@_playingtime'], 10),
+      rating: parseInt(item.stats.rating['@_value'], 10),
+      average: parseFloat(item.stats.rating.average['@_value']),
+      bayesianAverage: parseFloat(item.stats.rating.bayesaverage['@_value']),
+      median: parseFloat(item.stats.rating.median['@_value']),
+      standardDeviation: parseFloat(item.stats.rating.stddev['@_value']),
+      usersRated: parseFloat(item.stats.rating.usersrated['@_value']),
+      forTrade: parseInt(item.status['@_fortrade'], 10) !== 0,
+      lastModified: item.status['@_lastmodified'],
+      own: parseInt(item.status['@_own'], 10) !== 0,
+      preOrdered: parseInt(item.status['@_preordered'], 10) !== 0,
+      previouslyOwned: parseInt(item.status['@_prevowned'], 10) !== 0,
+      want: parseInt(item.status['@_want'], 10) !== 0,
+      wantToBuy: parseInt(item.status['@_wanttobuy'], 10) !== 0,
+      wantToPlay: parseInt(item.status['@_wanttoplay'], 10) !== 0,
+      wishlist: parseInt(item.status['@_wishlist'], 10) !== 0,
+      wishlistPriority: parseInt(item.status['@_wishlistpriority'], 10),
+      thumbnailUri: item.thumbnail,
+      yearPublished: parseInt(item.yearpublished, 10),
+    }));
   } catch (error) {
     console.error(error);
   }
@@ -146,33 +130,15 @@ export const bggSearchGames = async (
       arrayMode: true,
     });
 
-    const decodeMap: any = {amp: '&', lt: '<', gt: '>', quot: '"'};
-    const decodeText = (text: string) =>
-      text.replace(/&([^;]+);/g, (m: string, c: string) => {
-        if (c.startsWith('#')) {
-          return String.fromCharCode(parseInt(c.substr(1), 10));
-        } else {
-          return decodeMap[c] ?? m;
-        }
-      });
-
-    return {
-      totalItems: responseData.boardgames[0].boardgame?.length ?? 0,
-      termsOfUse: responseData.boardgames[0].attr_termsofuse,
-      items:
-        responseData.boardgames[0]?.boardgame?.map((item: any) => {
-          return {
-            objectId: item.attr_objectid,
-            objectType: 'thing',
-            subType: 'boardgame',
-            name: {
-              text: decodeText(item.name[0].innerText ?? item.name[0]),
-              sortIndex: 1,
-            },
-            yearPublished: item.yearpublished,
-          };
-        }) ?? [],
-    };
+    return (
+      responseData.boardgames[0]?.boardgame?.map((item: any) => {
+        return {
+          objectId: item.attr_objectid,
+          name: decodeText(item.name[0].innerText ?? item.name[0]),
+          yearPublished: item.yearpublished,
+        };
+      }) ?? []
+    );
   } catch (error) {
     console.error(error);
   }
