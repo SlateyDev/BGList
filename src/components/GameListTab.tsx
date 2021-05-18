@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -31,10 +31,15 @@ export const GameListTab = ({
       marginTop: 10,
       marginBottom: 10,
     },
+    groupedButtonsContainer: {
+      flexDirection: 'row',
+    },
     buttonContainer: {
       marginLeft: 10,
       marginRight: 10,
       marginTop: 10,
+      marginBottom: 10,
+      flex: 1,
     },
   });
 
@@ -42,17 +47,34 @@ export const GameListTab = ({
     navigation.navigate('Filter');
   };
 
+  const onShowSort = () => {
+    navigation.navigate('Sort');
+  };
+
+  useEffect(() => {
+    console.log(route.params);
+  }, [route.params]);
+
   return (
     <View style={styles.backgroundStyle}>
-      <View style={styles.buttonContainer}>
-        <Button title="Filter" onPress={() => onShowFilter()} />
-      </View>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
-        {(!gameList || gameList.items.length === 0) && (
+        {gameList.length === 0 && (
           <Text style={styles.gamesListTitle}>No games added</Text>
         )}
-        <GameList gameList={gameList} filter={route.params?.filter} />
+        <GameList
+          gameList={gameList}
+          filter={route.params?.filter}
+          sort={route.params?.sort}
+        />
       </ScrollView>
+      <View style={styles.groupedButtonsContainer}>
+        <View style={styles.buttonContainer}>
+          <Button title="Filter" onPress={() => onShowFilter()} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Sort" onPress={() => onShowSort()} />
+        </View>
+      </View>
     </View>
   );
 };

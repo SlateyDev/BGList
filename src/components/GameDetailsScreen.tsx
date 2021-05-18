@@ -40,16 +40,18 @@ export const GameDetailsScreen = ({
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic">
-      <Text style={styles.sectionTitle}>{route.params.game.name.text}</Text>
-      <Image style={styles.gameImage} source={{uri: route.params.game.image}} />
+      <Text style={styles.sectionTitle}>{route.params.game.name}</Text>
+      <Image
+        style={styles.gameImage}
+        source={{uri: route.params.game.imageUri}}
+      />
       <Text style={styles.sectionDetail}>
-        {`Players: ${route.params.game.stats?.minPlayers} - ${route.params.game.stats?.maxPlayers}`}
+        {`Players: ${route.params.game.minPlayers} - ${route.params.game.maxPlayers}`}
       </Text>
       <Text style={styles.sectionDetail}>
-        {`Duration: ${route.params.game.stats?.minPlaytime} `}
-        {route.params.game.stats?.minPlaytime !==
-          route.params.game.stats?.maxPlaytime &&
-          `- ${route.params.game.stats?.maxPlaytime}`}{' '}
+        {`Duration: ${route.params.game.minPlaytime} `}
+        {route.params.game.minPlaytime !== route.params.game.maxPlaytime &&
+          `- ${route.params.game.maxPlaytime}`}{' '}
         minutes
       </Text>
       <Text style={styles.sectionDetail}>
@@ -59,48 +61,48 @@ export const GameDetailsScreen = ({
         Times Played - {route.params.game.numPlays}
       </Text>
       <Text style={styles.sectionDetail}>
-        Owned = {route.params.game.status?.own ? 'Yes' : 'No'}
+        Owned = {route.params.game.own ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>
         {`Previously owned = ${
-          route.params.game.status?.previouslyOwned ? 'Yes' : 'No'
+          route.params.game.previouslyOwned ? 'Yes' : 'No'
         }`}
       </Text>
       <Text style={styles.sectionDetail}>
-        For trade = {route.params.game.status?.forTrade ? 'Yes' : 'No'}
+        For trade = {route.params.game.forTrade ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>
-        Want in trade = {route.params.game.status?.want ? 'Yes' : 'No'}
+        Want in trade = {route.params.game.want ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>
-        Want to play = {route.params.game.status?.wantToPlay ? 'Yes' : 'No'}
+        Want to play = {route.params.game.wantToPlay ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>
-        Want to buy = {route.params.game.status?.wantToBuy ? 'Yes' : 'No'}
+        Want to buy = {route.params.game.wantToBuy ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>
-        Pre-ordered = {route.params.game.status?.preOrdered ? 'Yes' : 'No'}
+        Pre-ordered = {route.params.game.preOrdered ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>
-        Wishlist = {route.params.game.status?.wishlist ? 'Yes' : 'No'}
+        Wishlist = {route.params.game.wishlist ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>
-        Number of owners in BGG = {route.params.game.stats?.numOwned}
+        Number of owners in BGG = {route.params.game.numOwned}
       </Text>
       <Text style={styles.sectionDetail}>
-        Your Rating = {route.params.game.stats?.rating.value}
+        Your Rating = {route.params.game.rating}
       </Text>
       <Text style={styles.sectionDetail}>
-        Average Rating = {route.params.game.stats?.rating.average.value}
+        Average Rating = {route.params.game.average}
       </Text>
       <Text style={styles.sectionDetail}>
-        Number of ratings = {route.params.game.stats?.rating.usersRated.value}
+        Number of ratings = {route.params.game.usersRated}
       </Text>
       <Text style={styles.sectionDetail}>
-        {`Std. Deviation = ${route.params.game.stats?.rating.standardDeviation.value}`}
+        {`Std. Deviation = ${route.params.game.standardDeviation}`}
       </Text>
       <Text style={styles.sectionDetail}>
-        {`Bayesian Average Rating = ${route.params.game.stats?.rating.bayesianAverage.value}`}
+        {`Bayesian Average Rating = ${route.params.game.bayesianAverage}`}
       </Text>
     </ScrollView>
   );

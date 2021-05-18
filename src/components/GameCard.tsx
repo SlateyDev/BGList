@@ -6,11 +6,11 @@ import {
   TouchableHighlight,
   useColorScheme,
 } from 'react-native';
-import {BggItemDefinition} from '../interface/bggItemDefinition';
+import {GameDefinition} from '../interface/gameDefinition';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useNavigation} from '@react-navigation/native';
 
-export const GameCard = (props: {game: BggItemDefinition}) => {
+export const GameCard = (props: {game: GameDefinition}) => {
   const navigation = useNavigation();
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -50,15 +50,15 @@ export const GameCard = (props: {game: BggItemDefinition}) => {
       }}>
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>
-          {props.game.name.text} ({props.game.yearPublished})
+          {props.game.name} ({props.game.yearPublished})
         </Text>
         <Text style={styles.sectionDescription}>
-          {`Players: ${props.game.stats?.minPlayers} - ${props.game.stats?.maxPlayers}`}
+          {`Players: ${props.game.minPlayers} - ${props.game.maxPlayers}`}
         </Text>
         <Text style={styles.sectionDescription}>
-          {`Duration: ${props.game.stats?.minPlaytime} `}
-          {props.game.stats?.minPlaytime !== props.game.stats?.maxPlaytime &&
-            `- ${props.game.stats?.maxPlaytime}`}{' '}
+          {`Duration: ${props.game.minPlaytime} `}
+          {props.game.minPlaytime !== props.game.maxPlaytime &&
+            `- ${props.game.maxPlaytime}`}{' '}
           minutes
         </Text>
       </View>

@@ -1,15 +1,16 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {BggItemDefinition} from './bggItemDefinition';
+import {GameDefinition} from './gameDefinition';
 
 type RootStackParamList = {
   Home: undefined;
   Account: undefined;
-  GameList: {filter: string | undefined};
+  GameList: {filter?: string; sort?: {key: string; desc: boolean}[]};
   GameSearch: undefined;
   Login: undefined;
-  GameDetails: {game: BggItemDefinition};
+  GameDetails: {game: GameDefinition};
   Filter: undefined;
+  Sort: undefined;
 };
 
 export type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
@@ -83,4 +84,14 @@ export type FilterNavigationProp = StackNavigationProp<
 export type FilterModalNavigationProps = {
   route: FilterRouteProp;
   navigation: FilterNavigationProp;
+};
+
+export type SortRouteProp = RouteProp<RootStackParamList, 'Sort'>;
+export type SortNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Sort'
+>;
+export type SortModalNavigationProps = {
+  route: SortRouteProp;
+  navigation: SortNavigationProp;
 };

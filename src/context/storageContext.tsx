@@ -1,21 +1,16 @@
 import React, {createContext, useEffect, useState} from 'react';
-import {BggGameListDefinition} from '../interface/bggGameListDefinition';
+import {GameDefinition} from '../interface/gameDefinition';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const initialGameList: BggGameListDefinition = {
-  totalItems: 0,
-  items: [],
-};
-
 type StorageContextProps = {
-  gameList: BggGameListDefinition;
-  updateGameList: (newGameList: BggGameListDefinition) => void;
+  gameList: GameDefinition[];
+  updateGameList: (newGameList: GameDefinition[]) => void;
   username: string;
   updateUsername: (newUsername: string) => void;
 };
 
 export const StorageContext = createContext<StorageContextProps>({
-  gameList: initialGameList,
+  gameList: [],
   updateGameList: () => {},
   username: '',
   updateUsername: () => {},
@@ -23,8 +18,7 @@ export const StorageContext = createContext<StorageContextProps>({
 
 export const StorageProvider: React.FC = ({children}) => {
   const [username, setUsername] = useState<string>('');
-  const [gameList, setGameList] =
-    useState<BggGameListDefinition>(initialGameList);
+  const [gameList, setGameList] = useState<GameDefinition[]>([]);
 
   const gameListCallback = (
     error: Error | undefined,
@@ -55,7 +49,7 @@ export const StorageProvider: React.FC = ({children}) => {
     AsyncStorage.getItem('username', usernameCallback);
   }, []);
 
-  const updateGameList = (newGameList: BggGameListDefinition) => {
+  const updateGameList = (newGameList: GameDefinition[]) => {
     AsyncStorage.setItem('gameList', JSON.stringify(newGameList));
     setGameList(newGameList);
   };

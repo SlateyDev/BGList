@@ -17,6 +17,8 @@ import {AccountTab} from './AccountTab';
 import {GameListTab} from './GameListTab';
 import {GameSearchTab} from './GameSearchTab';
 import FilterModal from './FilterModal';
+import SortModal from './SortModal';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 const Navigation = () => {
   const Stack = createStackNavigator();
@@ -38,16 +40,37 @@ const Navigation = () => {
   return (
     <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
       <Stack.Navigator screenOptions={screenOptions}>
-        <Stack.Screen name="Home" options={{title: 'Board Game Lister'}}>
+        <Stack.Screen name="Home" options={{title: 'Board Game List'}}>
           {() => (
             <Tabs.Navigator>
-              <Tabs.Screen name="Account" component={AccountTab} />
+              <Tabs.Screen
+                name="Account"
+                component={AccountTab}
+                options={{
+                  tabBarIcon: ({color, size}) => (
+                    <Icon name="user" size={size} color={color} />
+                  ),
+                }}
+              />
               <Tabs.Screen
                 name="GameList"
                 component={GameListTab}
-                options={{title: 'List'}}
+                options={{
+                  title: 'List',
+                  tabBarIcon: ({color, size}) => (
+                    <Icon name="list" size={size} color={color} />
+                  ),
+                }}
               />
-              <Tabs.Screen name="Search" component={GameSearchTab} />
+              <Tabs.Screen
+                name="Search"
+                component={GameSearchTab}
+                options={{
+                  tabBarIcon: ({color, size}) => (
+                    <Icon name="magnifier" size={size} color={color} />
+                  ),
+                }}
+              />
             </Tabs.Navigator>
           )}
         </Stack.Screen>
@@ -64,6 +87,11 @@ const Navigation = () => {
         <Stack.Screen
           name="Filter"
           component={FilterModal}
+          options={{headerBackTitle: 'Back'}}
+        />
+        <Stack.Screen
+          name="Sort"
+          component={SortModal}
           options={{headerBackTitle: 'Back'}}
         />
       </Stack.Navigator>

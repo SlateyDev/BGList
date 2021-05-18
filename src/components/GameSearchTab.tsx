@@ -8,14 +8,14 @@ import {
   useColorScheme,
 } from 'react-native';
 import {bggSearchGames} from '../service/bggApi';
-import {BggGameListDefinition} from '../interface/bggGameListDefinition';
+import {GameDefinition} from '../interface/gameDefinition';
 import {GameList} from './GameList';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {SwitchWithText} from './SwitchWithText';
 
 export const GameSearchTab = () => {
   const [searchText, setSearchText] = useState('');
-  const [gameList, setGameList] = useState<BggGameListDefinition | undefined>();
+  const [gameList, setGameList] = useState<GameDefinition[] | undefined>();
   const [useExact, setUseExact] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';
