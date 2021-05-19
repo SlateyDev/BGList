@@ -66,37 +66,43 @@ export const bggGetGameList = async (
       allowBooleanAttributes: true,
     });
 
-    return responseData.items.item.map((item: any) => ({
-      collectionId: parseInt(item['@_collid'], 10),
-      objectId: parseInt(item['@_objectid'], 10),
-      imageUri: item.image,
-      name: decodeText(item.name['#text']),
-      numPlays: parseInt(item.numplays, 10),
-      maxPlayers: parseInt(item.stats['@_maxplayers'], 10),
-      maxPlaytime: parseInt(item.stats['@_maxplaytime'], 10),
-      minPlayers: parseInt(item.stats['@_minplayers'], 10),
-      minPlaytime: parseInt(item.stats['@_minplaytime'], 10),
-      numOwned: parseInt(item.stats['@_numowned'], 10),
-      playingTime: parseInt(item.stats['@_playingtime'], 10),
-      rating: parseInt(item.stats.rating['@_value'], 10),
-      average: parseFloat(item.stats.rating.average['@_value']),
-      bayesianAverage: parseFloat(item.stats.rating.bayesaverage['@_value']),
-      median: parseFloat(item.stats.rating.median['@_value']),
-      standardDeviation: parseFloat(item.stats.rating.stddev['@_value']),
-      usersRated: parseFloat(item.stats.rating.usersrated['@_value']),
-      forTrade: parseInt(item.status['@_fortrade'], 10) !== 0,
-      lastModified: item.status['@_lastmodified'],
-      own: parseInt(item.status['@_own'], 10) !== 0,
-      preOrdered: parseInt(item.status['@_preordered'], 10) !== 0,
-      previouslyOwned: parseInt(item.status['@_prevowned'], 10) !== 0,
-      want: parseInt(item.status['@_want'], 10) !== 0,
-      wantToBuy: parseInt(item.status['@_wanttobuy'], 10) !== 0,
-      wantToPlay: parseInt(item.status['@_wanttoplay'], 10) !== 0,
-      wishlist: parseInt(item.status['@_wishlist'], 10) !== 0,
-      wishlistPriority: parseInt(item.status['@_wishlistpriority'], 10),
-      thumbnailUri: item.thumbnail,
-      yearPublished: parseInt(item.yearpublished, 10),
-    }));
+    return responseData.items.item.map((item: any) => {
+      return {
+        collectionId: parseInt(item['@_collid'], 10),
+        objectId: parseInt(item['@_objectid'], 10),
+        imageUri: item.image,
+        name: decodeText(item.name['#text']),
+        numPlays: parseInt(item.numplays, 10),
+        maxPlayers: parseInt(item.stats['@_maxplayers'], 10),
+        maxPlaytime: parseInt(item.stats['@_maxplaytime'], 10),
+        minPlayers: parseInt(item.stats['@_minplayers'], 10),
+        minPlaytime: parseInt(item.stats['@_minplaytime'], 10),
+        numOwned: parseInt(item.stats['@_numowned'], 10),
+        playingTime: parseInt(item.stats['@_playingtime'], 10),
+        rating: !isNaN(item.stats.rating['@_value'])
+          ? parseFloat(item.stats.rating['@_value'])
+          : undefined,
+        average: parseFloat(item.stats.rating.average['@_value']),
+        bayesianAverage: parseFloat(item.stats.rating.bayesaverage['@_value']),
+        median: parseFloat(item.stats.rating.median['@_value']),
+        standardDeviation: parseFloat(item.stats.rating.stddev['@_value']),
+        usersRated: parseFloat(item.stats.rating.usersrated['@_value']),
+        forTrade: parseInt(item.status['@_fortrade'], 10) !== 0,
+        lastModified: item.status['@_lastmodified'],
+        own: parseInt(item.status['@_own'], 10) !== 0,
+        preOrdered: parseInt(item.status['@_preordered'], 10) !== 0,
+        previouslyOwned: parseInt(item.status['@_prevowned'], 10) !== 0,
+        want: parseInt(item.status['@_want'], 10) !== 0,
+        wantToBuy: parseInt(item.status['@_wanttobuy'], 10) !== 0,
+        wantToPlay: parseInt(item.status['@_wanttoplay'], 10) !== 0,
+        wishlist: parseInt(item.status['@_wishlist'], 10) !== 0,
+        wishlistPriority: !isNaN(item.status['@_wishlistpriority'])
+          ? parseInt(item.status['@_wishlistpriority'], 10)
+          : 0,
+        thumbnailUri: item.thumbnail,
+        yearPublished: parseInt(item.yearpublished, 10),
+      };
+    });
   } catch (error) {
     console.error(error);
   }

@@ -103,7 +103,7 @@ export const AccountTab = ({navigation}: HomeScreenNavigationProps) => {
   };
 
   const clearData = async () => {
-    updateGameList({totalItems: 0, items: []});
+    updateGameList([]);
   };
 
   return (
