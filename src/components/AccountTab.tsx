@@ -11,27 +11,27 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {StorageContext} from '../context/storageContext';
 import {bggGetGameList} from '../service/bggApi';
-import {SwitchWithText} from './SwitchWithText';
+// import {SwitchWithText} from './SwitchWithText';
 import {HomeScreenNavigationProps} from '../interface/navigationProps';
 
 export const AccountTab = ({navigation}: HomeScreenNavigationProps) => {
   const {updateGameList, username, updateUsername} = useContext(StorageContext);
   const [textEntryUsername, setTextEntryUsername] = useState('');
-  const [getGameListEnabled, setGetGameListEnabled] = useState(true);
-  const [getPlaysEnabled, setGetPlaysEnabled] = useState(true);
-  const [updateGameStatusEnabled, setUpdateGameStatusEnabled] = useState(true);
-  const [updateGameRatingsEnabled, setUpdateGameRatingEnabled] = useState(true);
-  const [updateGameVersionsEnabled, setUpdateGameVersionsEnabled] =
-    useState(true);
-  const [updateGameCommentsEnabled, setUpdateGameCommentsEnabled] =
-    useState(true);
-  const [updateDeletedGamesEnabled, setUpdateDeletedGamesEnabled] =
-    useState(true);
-  const [updateAddedPlaysEnabled, setUpdateAddedPlaysEnabled] = useState(true);
-  const [updateEditedPlaysEnabled, setUpdateEditedPlaysEnabled] =
-    useState(true);
-  const [updateDeletedPlaysEnabled, setUpdateDeletedPlaysEnabled] =
-    useState(true);
+  // const [getGameListEnabled, setGetGameListEnabled] = useState(true);
+  // const [getPlaysEnabled, setGetPlaysEnabled] = useState(true);
+  // const [updateGameStatusEnabled, setUpdateGameStatusEnabled] = useState(true);
+  // const [updateGameRatingsEnabled, setUpdateGameRatingEnabled] = useState(true);
+  // const [updateGameVersionsEnabled, setUpdateGameVersionsEnabled] =
+  //   useState(true);
+  // const [updateGameCommentsEnabled, setUpdateGameCommentsEnabled] =
+  //   useState(true);
+  // const [updateDeletedGamesEnabled, setUpdateDeletedGamesEnabled] =
+  //   useState(true);
+  // const [updateAddedPlaysEnabled, setUpdateAddedPlaysEnabled] = useState(true);
+  // const [updateEditedPlaysEnabled, setUpdateEditedPlaysEnabled] =
+  //   useState(true);
+  // const [updateDeletedPlaysEnabled, setUpdateDeletedPlaysEnabled] =
+  //   useState(true);
 
   const isDarkMode = useColorScheme() === 'dark';
   const styles = useMemo(
@@ -98,9 +98,9 @@ export const AccountTab = ({navigation}: HomeScreenNavigationProps) => {
     }
   };
 
-  const syncToBGG = async () => {
-    navigation.navigate('Login');
-  };
+  // const syncToBGG = async () => {
+  //   navigation.navigate('Login');
+  // };
 
   const clearData = async () => {
     updateGameList([]);
@@ -121,20 +121,20 @@ export const AccountTab = ({navigation}: HomeScreenNavigationProps) => {
         <Text style={styles.label}>Sync Options</Text>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <View style={styles.group}>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Overwrite games list"
-                value={getGameListEnabled}
-                onValueChange={setGetGameListEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Retrieve plays (Requires login)"
-                value={getPlaysEnabled}
-                onValueChange={setGetPlaysEnabled}
-              />
-            </View>
+            {/*<View style={styles.switchContainer}>*/}
+            {/*  <SwitchWithText*/}
+            {/*    text="Overwrite games list"*/}
+            {/*    value={getGameListEnabled}*/}
+            {/*    onValueChange={setGetGameListEnabled}*/}
+            {/*  />*/}
+            {/*</View>*/}
+            {/*<View style={styles.switchContainer}>*/}
+            {/*  <SwitchWithText*/}
+            {/*    text="Retrieve plays (Requires login)"*/}
+            {/*    value={getPlaysEnabled}*/}
+            {/*    onValueChange={setGetPlaysEnabled}*/}
+            {/*  />*/}
+            {/*</View>*/}
             <View style={styles.buttonContainer}>
               <Button
                 title="Sync data from BGG"
@@ -143,71 +143,71 @@ export const AccountTab = ({navigation}: HomeScreenNavigationProps) => {
               />
             </View>
           </View>
-          <View style={styles.group}>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Add/Update game status"
-                value={updateGameStatusEnabled}
-                onValueChange={setUpdateGameStatusEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Add/Update game ratings"
-                value={updateGameRatingsEnabled}
-                onValueChange={setUpdateGameRatingEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Add/Update game versions"
-                value={updateGameVersionsEnabled}
-                onValueChange={setUpdateGameVersionsEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Add/Update game comments"
-                value={updateGameCommentsEnabled}
-                onValueChange={setUpdateGameCommentsEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Deleted games"
-                value={updateDeletedGamesEnabled}
-                onValueChange={setUpdateDeletedGamesEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Added plays"
-                value={updateAddedPlaysEnabled}
-                onValueChange={setUpdateAddedPlaysEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Edited plays"
-                value={updateEditedPlaysEnabled}
-                onValueChange={setUpdateEditedPlaysEnabled}
-              />
-            </View>
-            <View style={styles.switchContainer}>
-              <SwitchWithText
-                text="Deleted plays"
-                value={updateDeletedPlaysEnabled}
-                onValueChange={setUpdateDeletedPlaysEnabled}
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Sync data to BGG (Requires login)"
-                onPress={() => syncToBGG()}
-                disabled={!username || username !== textEntryUsername}
-              />
-            </View>
-          </View>
+          {/*<View style={styles.group}>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Add/Update game status"*/}
+          {/*      value={updateGameStatusEnabled}*/}
+          {/*      onValueChange={setUpdateGameStatusEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Add/Update game ratings"*/}
+          {/*      value={updateGameRatingsEnabled}*/}
+          {/*      onValueChange={setUpdateGameRatingEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Add/Update game versions"*/}
+          {/*      value={updateGameVersionsEnabled}*/}
+          {/*      onValueChange={setUpdateGameVersionsEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Add/Update game comments"*/}
+          {/*      value={updateGameCommentsEnabled}*/}
+          {/*      onValueChange={setUpdateGameCommentsEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Deleted games"*/}
+          {/*      value={updateDeletedGamesEnabled}*/}
+          {/*      onValueChange={setUpdateDeletedGamesEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Added plays"*/}
+          {/*      value={updateAddedPlaysEnabled}*/}
+          {/*      onValueChange={setUpdateAddedPlaysEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Edited plays"*/}
+          {/*      value={updateEditedPlaysEnabled}*/}
+          {/*      onValueChange={setUpdateEditedPlaysEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.switchContainer}>*/}
+          {/*    <SwitchWithText*/}
+          {/*      text="Deleted plays"*/}
+          {/*      value={updateDeletedPlaysEnabled}*/}
+          {/*      onValueChange={setUpdateDeletedPlaysEnabled}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*  <View style={styles.buttonContainer}>*/}
+          {/*    <Button*/}
+          {/*      title="Sync data to BGG (Requires login)"*/}
+          {/*      onPress={() => syncToBGG()}*/}
+          {/*      disabled={!username || username !== textEntryUsername}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*</View>*/}
           <View style={styles.group}>
             <View style={styles.buttonContainer}>
               <Button title="Clear game data" onPress={() => clearData()} />
