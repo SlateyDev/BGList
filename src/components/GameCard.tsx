@@ -17,13 +17,18 @@ export const GameCard = (props: {game: GameDefinition}) => {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        sectionContainer: {
-          padding: 4,
+        card: {
           marginTop: 5,
           marginBottom: 5,
+          flexDirection: 'row',
           width: '100%',
           backgroundColor: isDarkMode ? Colors.dark : Colors.light,
           borderRadius: 10,
+        },
+        sectionContainer: {
+          flexShrink: 1,
+          flexGrow: 1,
+          padding: 4,
         },
         sectionTitle: {
           fontSize: 18,
@@ -38,9 +43,42 @@ export const GameCard = (props: {game: GameDefinition}) => {
         highlight: {
           backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
         },
+        rating: {
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 50,
+          borderTopRightRadius: 5,
+          borderBottomRightRadius: 5,
+        },
       }),
     [isDarkMode],
   );
+
+  const getRatingColour = (rating: number) => {
+    switch (Math.floor(rating)) {
+      case 1:
+        return '#ff0000';
+      case 2:
+        return '#ff3366';
+      case 3:
+        return '#ff6699';
+      case 4:
+        return '#ff66cc';
+      case 5:
+        return '#cc99ff';
+      case 6:
+        return '#9999ff';
+      case 7:
+        return '#99ffff';
+      case 8:
+        return '#66ff99';
+      case 9:
+        return '#33cc99';
+      case 10:
+        return '#00cc00';
+    }
+    return undefined;
+  };
 
   return (
     <TouchableHighlight
@@ -48,19 +86,30 @@ export const GameCard = (props: {game: GameDefinition}) => {
       onPress={() => {
         navigation.navigate('GameDetails', {game: props.game});
       }}>
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>
-          {props.game.name} ({props.game.yearPublished})
-        </Text>
-        <Text style={styles.sectionDescription}>
-          {`Players: ${props.game.minPlayers} - ${props.game.maxPlayers}`}
-        </Text>
-        <Text style={styles.sectionDescription}>
-          {`Duration: ${props.game.minPlaytime} `}
-          {props.game.minPlaytime !== props.game.maxPlaytime &&
-            `- ${props.game.maxPlaytime}`}{' '}
-          minutes
-        </Text>
+      <View style={styles.card}>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>
+            {props.game.name} ({props.game.yearPublished})
+          </Text>
+          <Text style={styles.sectionDescription}>
+            {`Players: ${props.game.minPlayers} - ${props.game.maxPlayers}`}
+          </Text>
+          <Text style={styles.sectionDescription}>
+            {`Duration: ${props.game.minPlaytime} `}
+            {props.game.minPlaytime !== props.game.maxPlaytime &&
+              `- ${props.game.maxPlaytime}`}{' '}
+            minutes
+          </Text>
+        </View>
+        {props.game.rating && (
+          <View
+            style={{
+              ...styles.rating,
+              backgroundColor: getRatingColour(props.game.rating),
+            }}>
+            <Text>{props.game.rating}</Text>
+          </View>
+        )}
       </View>
     </TouchableHighlight>
   );
