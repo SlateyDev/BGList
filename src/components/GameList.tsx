@@ -76,7 +76,7 @@ export const GameList = ({filter, gameList, sort}: GameListProps) => {
 
   return (
     <View style={styles.list}>
-      {gameList &&
+      {!!gameList &&
         filteredSortedGameList()?.map(game => (
           <GameCard key={game.objectId} game={game} />
         ))}

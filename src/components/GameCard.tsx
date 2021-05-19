@@ -101,15 +101,15 @@ export const GameCard = (props: {game: GameDefinition}) => {
             minutes
           </Text>
         </View>
-        {props.game.rating && (
-          <View
-            style={{
-              ...styles.rating,
-              backgroundColor: getRatingColour(props.game.rating),
-            }}>
-            <Text>{props.game.rating}</Text>
-          </View>
-        )}
+        <View
+          style={{
+            ...styles.rating,
+            backgroundColor: getRatingColour(props.game.rating),
+          }}>
+          <Text style={{textAlign: 'center'}}>
+            {props.game.rating ? props.game.rating : 'Not rated'}
+          </Text>
+        </View>
       </View>
     </TouchableHighlight>
   );
