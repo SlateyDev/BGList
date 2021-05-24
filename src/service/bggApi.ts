@@ -48,6 +48,14 @@ export const bggLogout = async (): Promise<Response> => {
   });
 };
 
+function intOrUndefined(value: any) {
+  return !isNaN(value) ? parseInt(value, 10) : undefined;
+}
+
+function floatOrUndefined(value: any) {
+  return !isNaN(value) ? parseFloat(value) : undefined;
+}
+
 //Note: this request can fail and has not yet been handled
 export const bggGetGameList = async (
   username: string,
@@ -74,14 +82,12 @@ export const bggGetGameList = async (
         name: decodeText(item.name['#text']),
         numPlays: parseInt(item.numplays, 10),
         maxPlayers: parseInt(item.stats['@_maxplayers'], 10),
-        maxPlaytime: parseInt(item.stats['@_maxplaytime'], 10),
+        maxPlaytime: intOrUndefined(item.stats['@_maxplaytime']),
         minPlayers: parseInt(item.stats['@_minplayers'], 10),
-        minPlaytime: parseInt(item.stats['@_minplaytime'], 10),
+        minPlaytime: intOrUndefined(item.stats['@_minplaytime']),
         numOwned: parseInt(item.stats['@_numowned'], 10),
-        playingTime: parseInt(item.stats['@_playingtime'], 10),
-        rating: !isNaN(item.stats.rating['@_value'])
-          ? parseFloat(item.stats.rating['@_value'])
-          : undefined,
+        playingTime: intOrUndefined(item.stats['@_playingtime']),
+        rating: floatOrUndefined(item.stats.rating['@_value']),
         average: parseFloat(item.stats.rating.average['@_value']),
         bayesianAverage: parseFloat(item.stats.rating.bayesaverage['@_value']),
         median: parseFloat(item.stats.rating.median['@_value']),
@@ -96,9 +102,8 @@ export const bggGetGameList = async (
         wantToBuy: parseInt(item.status['@_wanttobuy'], 10) !== 0,
         wantToPlay: parseInt(item.status['@_wanttoplay'], 10) !== 0,
         wishlist: parseInt(item.status['@_wishlist'], 10) !== 0,
-        wishlistPriority: !isNaN(item.status['@_wishlistpriority'])
-          ? parseInt(item.status['@_wishlistpriority'], 10)
-          : 0,
+        wishlistPriority:
+          intOrUndefined(item.status['@_wishlistpriority']) ?? 0,
         thumbnailUri: item.thumbnail,
         yearPublished: parseInt(item.yearpublished, 10),
       };
