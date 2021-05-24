@@ -1,8 +1,8 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {GameDefinition} from '../interface/gameDefinition';
 import AsyncStorage from '@react-native-community/async-storage';
-import {openDatabase, Transaction} from 'react-native-sqlite-storage';
-import migrations from './migrations';
+import {AsyncQuery, CallbackQuery} from '../utils/sqlite';
+import {migrateDb} from '../utils/sqliteMigration';
 
 type StorageContextProps = {
   gameList: GameDefinition[];
@@ -18,128 +18,56 @@ export const StorageContext = createContext<StorageContextProps>({
   updateUsername: () => {},
 });
 
-const runMigrationCommands = (
-  transaction: Transaction,
-  migrationCommands: string[],
-) => {
-  if (migrationCommands.length > 0) {
-    console.log('performing migration command:', migrationCommands[0]);
-    transaction.executeSql(
-      migrationCommands[0],
-      [],
-      () => {
-        runMigrationCommands(transaction, migrationCommands.slice(1));
-      },
-      (_tx, error) => {
-        console.log(error);
-      },
-    );
-  }
-};
-
-const runMigration = (
-  transaction: Transaction,
-  existingMigrations: string[],
-) => {
-  const migrationCommands = getMigrationCommands(existingMigrations);
-  runMigrationCommands(transaction, migrationCommands);
-};
-
-const getMigrationCommands = (existingMigrations: string[]) => {
-  let migrationCommandList: string[] = [];
-  for (let migration of migrations) {
-    if (existingMigrations.indexOf(migration.name) === -1) {
-      console.log('migration required:', migration.name);
-      migrationCommandList = [
-        ...migrationCommandList,
-        ...migration.up,
-        `INSERT INTO migrations_history (MigrationId) VALUES ("${migration.name}")`,
-      ];
+async function AddGamesToDB(games: GameDefinition[]) {
+  for (let game of games) {
+    try {
+      await AsyncQuery(
+        'INSERT INTO game (objectId, collectionId, imageUri, name, numPlays, maxPlayers, maxPlaytime, minPlayers, minPlaytime, numOwned, playingTime, rating, average, bayesianAverage, median, standardDeviation, usersRated, forTrade, lastModified, own, preOrdered, previouslyOwned, want, wantToBuy, wantToPlay, wishlist, wishlistPriority, thumbnailUri, yearPublished) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [
+          game.objectId,
+          game.collectionId,
+          game.imageUri,
+          game.name,
+          game.numPlays,
+          game.maxPlayers,
+          game.maxPlaytime,
+          game.minPlayers,
+          game.minPlaytime,
+          game.numOwned,
+          game.playingTime,
+          game.rating,
+          game.average,
+          game.bayesianAverage,
+          game.median,
+          game.standardDeviation,
+          game.usersRated,
+          game.forTrade,
+          game.lastModified,
+          game.own,
+          game.preOrdered,
+          game.previouslyOwned,
+          game.want,
+          game.wantToBuy,
+          game.wantToPlay,
+          game.wishlist,
+          game.wishlistPriority,
+          game.thumbnailUri,
+          game.yearPublished,
+        ],
+      );
+    } catch (e) {
+      console.log('error:', e.message);
     }
   }
-  return migrationCommandList;
-};
-
-const db = openDatabase(
-  {
-    name: 'bglist.db',
-    location: 'default',
-  },
-  () => {},
-  e => console.log(e),
-);
-
-const migrateDb = async () => {
-  return new Promise<void>((resolve, reject) => {
-    // db.transaction(
-    //   txn => {
-    //     txn.executeSql(
-    //       'SELECT name FROM sqlite_master WHERE type="table"',
-    //       [],
-    //       (_t, r) => {
-    //         console.log(r.rows.length);
-    //         console.log(r.rows.raw());
-    //       },
-    //       e => console.log(e),
-    //     );
-    //   },
-    //   e => console.log('transaction error', e),
-    //   () => console.log('success'),
-    // );
-    // db.executeSql("DROP TABLE migrations_history", [], () => {}, () => {});
-    // db.executeSql("DROP TABLE game", [], () => {}, () => {});
-    // return;
-
-    db.transaction(
-      txn => {
-        txn.executeSql(
-          'SELECT name FROM sqlite_master WHERE type="table" and name="migrations_history"',
-          [],
-          (_tx, result) => {
-            if (result.rows.length === 0) {
-              console.log('creating migrations table');
-              txn.executeSql(
-                'CREATE TABLE IF NOT EXISTS migrations_history (MigrationId TEXT PRIMARY KEY)',
-                [],
-                async (_t, _r) => {
-                  runMigration(txn, []);
-                },
-                (_tx, e) => console.log('create failed', e),
-              );
-            } else {
-              console.log('migrations table exists');
-              txn.executeSql(
-                'SELECT * FROM migrations_history',
-                [],
-                (_t, r) => {
-                  runMigration(
-                    txn,
-                    r.rows.raw().map(migration => migration.MigrationId),
-                  );
-                },
-                (_tx, e) => console.log('create failed', e),
-              );
-            }
-          },
-          e => console.log(e),
-        );
-      },
-      transError => reject(transError),
-      () => resolve(),
-    );
-  });
-};
+}
 
 export const StorageProvider: React.FC = ({children}) => {
   const [username, setUsername] = useState<string>('');
   const [gameList, setGameList] = useState<GameDefinition[]>([]);
 
-  const gameListCallback = (
-    error: Error | undefined,
-    storageGameList: string | undefined,
-  ) => {
+  const gameListCallback = (storageGameList: GameDefinition[] | undefined) => {
     if (storageGameList) {
-      setGameList(JSON.parse(storageGameList));
+      setGameList(storageGameList);
     }
   };
 
@@ -164,15 +92,15 @@ export const StorageProvider: React.FC = ({children}) => {
       console.log('migration complete');
 
       console.log('getting items');
-      await AsyncStorage.getItem('gameList', gameListCallback);
+      CallbackQuery('SELECT * FROM game', [], gameListCallback);
       await AsyncStorage.getItem('username', usernameCallback);
     }
 
     startProviderActions();
   }, []);
 
-  const updateGameList = (newGameList: GameDefinition[]) => {
-    AsyncStorage.setItem('gameList', JSON.stringify(newGameList));
+  const updateGameList = async (newGameList: GameDefinition[]) => {
+    await AddGamesToDB(newGameList);
     setGameList(newGameList);
   };
 

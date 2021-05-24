@@ -52,7 +52,7 @@ export const GameListTab = ({
   };
 
   useEffect(() => {
-    console.log(route.params);
+    console.log('route params', route.params);
   }, [route.params]);
 
   return (
