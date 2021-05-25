@@ -94,7 +94,9 @@ export const bggGetGameList = async (
         standardDeviation: parseFloat(item.stats.rating.stddev['@_value']),
         usersRated: parseFloat(item.stats.rating.usersrated['@_value']),
         forTrade: parseInt(item.status['@_fortrade'], 10) !== 0,
-        lastModified: item.status['@_lastmodified'],
+        lastModified: new Date(
+          item.status['@_lastmodified'].replace(' ', 'T'),
+        ).getTime(),
         own: parseInt(item.status['@_own'], 10) !== 0,
         preOrdered: parseInt(item.status['@_preordered'], 10) !== 0,
         previouslyOwned: parseInt(item.status['@_prevowned'], 10) !== 0,

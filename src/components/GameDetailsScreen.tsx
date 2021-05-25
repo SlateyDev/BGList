@@ -69,6 +69,11 @@ export const GameDetailsScreen = ({
         }`}
       </Text>
       <Text style={styles.sectionDetail}>
+        {`Last Modified = ${new Date(
+          route.params.game.lastModified,
+        ).toLocaleString()}`}
+      </Text>
+      <Text style={styles.sectionDetail}>
         For trade = {route.params.game.forTrade ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.sectionDetail}>

@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {GameDefinition} from '../interface/gameDefinition';
 import AsyncStorage from '@react-native-community/async-storage';
-import {AsyncQuery, CallbackQuery} from '../utils/sqlite';
+import {AddRange, Query} from '../utils/sqlite';
 import {migrateDb} from '../utils/sqliteMigration';
 
 type StorageContextProps = {
@@ -17,49 +17,6 @@ export const StorageContext = createContext<StorageContextProps>({
   username: '',
   updateUsername: () => {},
 });
-
-async function AddGamesToDB(games: GameDefinition[]) {
-  for (let game of games) {
-    try {
-      await AsyncQuery(
-        'INSERT INTO game (objectId, collectionId, imageUri, name, numPlays, maxPlayers, maxPlaytime, minPlayers, minPlaytime, numOwned, playingTime, rating, average, bayesianAverage, median, standardDeviation, usersRated, forTrade, lastModified, own, preOrdered, previouslyOwned, want, wantToBuy, wantToPlay, wishlist, wishlistPriority, thumbnailUri, yearPublished) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        [
-          game.objectId,
-          game.collectionId,
-          game.imageUri,
-          game.name,
-          game.numPlays,
-          game.maxPlayers,
-          game.maxPlaytime,
-          game.minPlayers,
-          game.minPlaytime,
-          game.numOwned,
-          game.playingTime,
-          game.rating,
-          game.average,
-          game.bayesianAverage,
-          game.median,
-          game.standardDeviation,
-          game.usersRated,
-          game.forTrade,
-          game.lastModified,
-          game.own,
-          game.preOrdered,
-          game.previouslyOwned,
-          game.want,
-          game.wantToBuy,
-          game.wantToPlay,
-          game.wishlist,
-          game.wishlistPriority,
-          game.thumbnailUri,
-          game.yearPublished,
-        ],
-      );
-    } catch (e) {
-      console.log('error:', e.message);
-    }
-  }
-}
 
 export const StorageProvider: React.FC = ({children}) => {
   const [username, setUsername] = useState<string>('');
@@ -92,7 +49,7 @@ export const StorageProvider: React.FC = ({children}) => {
       console.log('migration complete');
 
       console.log('getting items');
-      CallbackQuery('SELECT * FROM game', [], gameListCallback);
+      Query('SELECT * FROM game', [], gameListCallback);
       await AsyncStorage.getItem('username', usernameCallback);
     }
 
@@ -100,7 +57,7 @@ export const StorageProvider: React.FC = ({children}) => {
   }, []);
 
   const updateGameList = async (newGameList: GameDefinition[]) => {
-    await AddGamesToDB(newGameList);
+    await AddRange('game', newGameList);
     setGameList(newGameList);
   };
 

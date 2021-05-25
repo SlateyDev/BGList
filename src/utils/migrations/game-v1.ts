@@ -20,7 +20,7 @@ const migration = {
       'standardDeviation DECIMAL,' +
       'usersRated INTEGER,' +
       'forTrade BIT,' +
-      'lastModified DATETIME2,' +
+      'lastModified INTEGER,' +
       'own BIT,' +
       'preOrdered BIT,' +
       'previouslyOwned BIT,' +

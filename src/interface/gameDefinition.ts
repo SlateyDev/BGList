@@ -20,7 +20,7 @@ export interface GameDefinition {
   usersRated: number;
 
   forTrade: boolean;
-  lastModified: Date;
+  lastModified: number;
   own: boolean;
   preOrdered: boolean;
   previouslyOwned: boolean;
